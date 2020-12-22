@@ -1,0 +1,50 @@
+Package: MultiMoMo
+Title: A multi-population Li-Lee mortality model
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package downloades mortality data from HMD and Eurostat. Moreover, it provides several functions for calibrating and projecting a Li-Lee mortality model. On top of that, functions for calculating period and cohort life expectancies are available. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+Imports: 
+    cowplot,
+    curl,
+    data.table,
+    doSNOW,
+    dplyr,
+    ggplot2,
+    ggpubr,
+    grDevices,
+    gridExtra,
+    graphics,
+    ISOcodes,
+    lattice,
+    MASS,
+    mathjaxr,
+    plyr,
+    psych,
+    RCurl,
+    readr,
+    reshape2,
+    rlang,
+    snow,
+    stats,
+    systemfit,
+    tidyr,
+    utils,
+    foreach
+VignetteBuilder: knitr
+RdMacros: mathjaxr
+Depends: 
+    R (>= 2.10)
