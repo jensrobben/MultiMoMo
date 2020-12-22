@@ -22,4 +22,4 @@ country-specific deviation from this trend.
 3. Fitting a time series process (RWD or AR(k)-process) to the time-dependent parameters in the Li-Lee model.
 4. Projecting the time dependent parameters to future years using the fitted time series processes and using multiple simulations.
 5. Closing (the simulations of) the mortality rates.
-6. Calculating period and cohort life expectancies.
+6. Calculating period and cohort life expectancies. 
