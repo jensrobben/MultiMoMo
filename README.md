@@ -1,5 +1,3 @@
-# Multi-population Mortality Modelling
-
 # The `MultiMoMo` package <img src="man/figures/flags2.png" alt="" align="right" height="200">
 
 This is the source code for the  `MultiMoMo` package, which is still under development.
