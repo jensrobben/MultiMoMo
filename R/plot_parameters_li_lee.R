@@ -6,7 +6,7 @@
 #' @param yv The vector of years (for your country of interest).
 #' @param fit The estimated Li-Lee model.
 #' @param sex The gender of interest (\code{"Male"} or \code{"Female"})
-#' @param CountrySPEC The user code of your country of interest.
+#' @param country_spec The user code of your country of interest.
 #' @param method The method used to fit the Li-Lee mortality model (currently only \code{"NR"} working).
 #' @param type Which type of parameter estimates should be visualized? Either one of the common
 #'   parameter estimates (\code{"A.x"}, \code{"B.x"} or \code{"K.t"}), one of the country-specific
@@ -22,9 +22,9 @@
 #' xv    <- 0:90
 #' yv = yvSPEC <- 1970:2018
 #' Countries   <- names(dat_M$UNI)
-#' CountrySPEC <- "BE"
-#' fit_M <- fit_li_lee(xv, yv, yvSPEC, CountrySPEC, dat_M, "NR", TRUE, FALSE)
-#' plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", CountrySPEC, "NR", "ALL")
+#' country_spec <- "BE"
+#' fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
+#' plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "ALL")
 #'
 #' @import ggplot2
 #' @importFrom plyr mapvalues
@@ -35,7 +35,7 @@
 
 
 
-plot_parameters_li_lee <- function(xv, yv, fit, sex, CountrySPEC, method, type){
+plot_parameters_li_lee <- function(xv, yv, fit, sex, country_spec, method, type){
 
   if (method != "NR")
     stop("Only the Newton-Raphson method ('NR') works for now.")
@@ -49,7 +49,7 @@ plot_parameters_li_lee <- function(xv, yv, fit, sex, CountrySPEC, method, type){
   if (! sex %in% c("Male", "Female"))
     stop("The argument sex must be either 'Male' or 'Female'.")
 
-  if(! CountrySPEC %in% MultiMoMo::country_codes[,"User_code"])
+  if(! country_spec %in% MultiMoMo::country_codes[,"User_code"])
     stop("Wrong user code. Check MultiMoMo::country_codes to look up the correct user code for your country")
 
   param_names <- c("A.x", "B.x", "K.t", "a.x", "b.x", "k.t")
@@ -68,9 +68,9 @@ plot_parameters_li_lee <- function(xv, yv, fit, sex, CountrySPEC, method, type){
     xrange <- xrange[[type]]
 
   smain <- list(bquote("Common"~.(sex):~A[x]), bquote("Common"~.(sex):~B[x]), bquote("Common"~.(sex):~K[t]),
-                bquote(.(CountrySPEC)~ .(sex): ~alpha[x]^(.(CountrySPEC))),
-                bquote(.(CountrySPEC)~ .(sex): ~beta[x]^(.(CountrySPEC))),
-                bquote(.(CountrySPEC)~ .(sex): ~kappa[t]^(.(CountrySPEC))))
+                bquote(.(country_spec)~ .(sex): ~alpha[x]^(.(country_spec))),
+                bquote(.(country_spec)~ .(sex): ~beta[x]^(.(country_spec))),
+                bquote(.(country_spec)~ .(sex): ~kappa[t]^(.(country_spec))))
   names(smain) <- param_names
 
   if (type != "ALL")

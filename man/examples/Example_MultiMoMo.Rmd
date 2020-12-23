@@ -41,20 +41,62 @@ We perform this automatic downloading and adjusting process using the following 
 ```{r data, eval=FALSE}
 xv <- 0:90
 yv <- 1988:2018
-yvSPEC <- 1988:2018
+yv_spec <- 1988:2018
 countries <- c("AT", "BE", "DK", "FI", "FR", "DE", "IS", "IE", "LU", "NL", "NO", "SE", "CH", "UK")
-Country_spec <- "BE"
+country_spec <- "BE"
 username <- ""
 password <- ""
 data <- get_mortality_data(xv, yv, yv_spec, countries, country_spec, username, password)
 ```
-In order to be able to run the above code chunk, you first need to create an account on the [Human Mortality Database](https://www.mortality.org) and provide your username and password at the correct place within the code. Running this code can take a few minutes, depending on the number of countries you use in the multi-population model. We selected the countries with a gross-domestic-product above the European average in 2018.
+In order to be able to run the above code chunk, you first need to create an account on the [Human Mortality Database](https://www.mortality.org) and provide your username and password at the correct place within the code. Running this code can take a few minutes, depending on the number of countries you use in the multi-population model. We selected the countries as the ones with a gross-domestic-product above the European average in 2018. Our country of interest is Belgium.
 
-The package `MultiMoMo` provides such an example dataset (using the same set of countries).
+The package `MultiMoMo` provides such an example dataset (using the same set of countries as above). We adjust the year range to the one above using the function `get_data_specific_range`.
 ```{r}
+xv <- 0:90
+yv <- 1988:2018
+yv_spec <- 1988:2018
+countries <- c("AT", "BE", "DK", "FI", "FR", "DE", "IS", "IE", "LU", "NL", "NO", "SE", "CH", "UK")
+country_spec <- "BE"
 data <- MultiMoMo::european_mortality_data
+data <- get_data_specific_range(xv, yv, yv_spec, data, countries, country_spec)
+dimnames(data$M$UNI$BE$dtx)
 ```
 
+## Model specification
+The mortality model structures the logarithm of the force of mortality for Belgium, $\mu_{x,t}^{\text{BE}}$, as follows
+$$\begin{eqnarray}
+\ln \mu_{x,t}^{\text{BE}} &=& \ln \mu_{x,t}^{\text{EU}}+\ln \tilde{\mu}_{x,t}^{\text{BE}} \label{eq:fullmu}\\
+\ln \mu_{x,t}^{\text{EU}} &=& A_x + B_xK_t \label{eq:Europe} \\
+\ln \tilde{\mu}_{x,t}^{\text{BE}} &=& \alpha_x + \beta_x \kappa_t. \label{eq:Belgium}
+\end{eqnarray},$$
+We recognize two times a Lee \& Carter specification; \ref{eq:Europe} is a LC model for the European evolution of mortality (driven by $\mu_{x,t}^{\text{EU}}$) and \ref{eq:Belgium} is a LC model for the Belgian deviation from this common trend (specified by $\tilde{\mu}_{x,t}^{\text{BE}}$). We calibrate this model on data with ages ranging from 0 up to 90, thus $\mathcal{X}=\{0,\ldots,90\}$, and a calibration period from $t_{\text{start}}$ up to 2018 for the European mortality trend. The same calibration period is used for the Belgian deviation from this common European mortality trend.
 
+For the time dependent parameters, $K_t$ and $\kappa_t$, the following time series models are used
+$$\begin{eqnarray}
+K_{t+1} &=& K_t+\theta + \epsilon_{t+1} \label{RWD} \\
+\kappa_{t+1} &=& c + \phi\kappa_{t}+\delta_{t+1}, \label{AR1}
+\end{eqnarray}$$
+for males and females. This leads to four stochastic processes ($K_t^{M}, \kappa_t^M, K_t^F, \kappa_t^F$). The dynamics of the common period effect (see $\eqref{RWD}$), $K_t$, are modeled with a Random Walk with Drift ([RWD]), where $\theta$ is the drift and $\epsilon_{t+1}$ is white noise. The Belgian period effect (see $\eqref{AR1}$) $\kappa_t$ follows, in contrast with the \cite{IABE2015} model, an AR(1) process with intercept $c$.
+
+Further, we will jointly model the time series dynamics for men and women by assuming a multivariate Gaussian distribution with mean $(0,0,0,0)$ and covariance matrix $\boldsymbol{C}$ for the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$. We calibrate the parameters in these time series specifications on the estimated $K_t$ and $\kappa_t$ parameters, for $t\in \mathcal{T}$, and use these dynamics to forecast $\mu_{x,t}^{\text{BEL}}$ for $t \in \{2020, 2021,\ldots,t_{\max}\}$.
+
+## Model calibration
+We calibrate the parameters ($A_x$, $B_x$, $K_t$, $\alpha_x$, $\beta_x$ and $\kappa_t$) in the LL specification using Maximum Likelihood Estimation. We assume a Poisson distribution for the number of deaths random variable $D_{x,t}$, with mean $E_{x,t} \cdot \mu_{x,t}$ and $E_{x,t}$ the observed exposure to risk. To avoid identification problems in the LL model we use a conditional maximum likelihood approach. We calibrate the common parameters (i.e.~$A_x$, $B_x$ and $K_t$) in a first step, followed by the calibration of the Belgian parameters (i.e.~$\alpha_x$, $\beta_x$ and $\kappa_t$) in a second step. We apply this calibration strategy separately for males and females. This is done using the following bunch of code
+```{r}
+fit_M <- fit_li_lee(xv, yv, yv_spec, country_spec, data = data$M, method = "NR", Ax = TRUE, exclude_coh = FALSE)
+fit_F <- fit_li_lee(xv, yv, yv_spec, country_spec, data = data$F, method = "NR", Ax = TRUE, exclude_coh = FALSE)
+```
+
+The calibrated parameters for males can be visualized as follows:
+```{r, fig.align='center'}
+plot_parameters_li_lee(xv, yv_spec, fit_M, sex = "Male", country_spec, method = "NR", type = "ALL")
+
+```
+
+You can also plot e.g. the Belgian female period effect on its own:
+```{r, fig.align='center'}
+plot_parameters_li_lee(xv, yv_spec, fit_M, sex = "Female", country_spec, method = "NR", type = "k.t")
+
+```
 
 
