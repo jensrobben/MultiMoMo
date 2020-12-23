@@ -1,0 +1,60 @@
+---
+title: "Constructing a Multi-popopulation Mortality Model"
+author: "Jens Robben"
+date: "22-12-2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+
+We illustrate the use of the `MultiMoMo` package.
+
+Load the required packages
+```{r}
+require(MultiMoMo)
+```
+
+
+## Downloading the mortality data
+Int this section, we download annual data on the observed number of deaths, $d_{x,t}$, and the corresponding exposures to risk, $E_{x,t}$, for a set of countries over a specified calibration period and over a specified age range. We collect this data from two data sources: the Human Mortality Database (HMD) and Eurostat. Further we use a collection of 14 European countries.
+
+First, the available countries, their country labels and the available years can be retrieved as follows: 
+```{r}
+df <- get_country_codes()
+head(df[,c(1,8,6,7,2,3)])
+```
+
+Make sure that your selected calibration period falls within the available year range $[FY,EY]$ for each country in your multi-population model. The column `User_code` in this data frame refers to the user codes of the different countries. Those user codes are used to refer to the countries of interest. 
+
+Next, we download the mortality data from the Human Mortality Database (HMD) and Eurostat. We collect the data for age range $\{0,1,2,...,90\}$ and calibration period $\{1988, 1989, ..., 2018\}$. We are interested in retrieving mortality statistics from Belgium (country of interest). From the HMD database we use the tables `Deaths` and `Exposure to risk` in $1\times1$ format. These files contain the number of deaths and exposures for the selected country per year, per sex and per age in period format. Eurostat only lists the period number of deaths. However, we obtain the exposures in period format using databases on the population size at $1$ January of each year $t$, say $P_{x,t}$, and the cohort number of deaths, say $C_{x,t}$, as defined according to the protocol of HMD. The cohort number of deaths $C_{x,t}$ refers to the number of people who were born in year $t-x-1$ and died in year $t$. Adjusting to the HMD protocol requires the following transformations:
+$$\begin{eqnarray*}
+E_{x,t} &=& \frac{1}{2} \left( P_{x,t} + P_{x,t+1} \right) + \frac{1}{6} \left(\frac{1}{2}C_{x,t} - \frac{1}{2}C_{x+1,t} \right) \ \ \text{if}\ x>0 \\
+E_{0,t} &=& \frac{1}{2} \left( P_{0,t} + P_{0,t+1} \right) + \frac{1}{6} \left(C_{0,t} - \frac12 C_{1,t}\right).\\
+\end{eqnarray*}$$
+We perform this automatic downloading and adjusting process using the following code chunk:
+```{r data, eval=FALSE}
+xv <- 0:90
+yv <- 1988:2018
+yvSPEC <- 1988:2018
+countries <- c("AT", "BE", "DK", "FI", "FR", "DE", "IS", "IE", "LU", "NL", "NO", "SE", "CH", "UK")
+Country_spec <- "BE"
+username <- ""
+password <- ""
+data <- get_mortality_data(xv, yv, yv_spec, countries, country_spec, username, password)
+```
+In order to be able to run the above code chunk, you first need to create an account on the [Human Mortality Database](https://www.mortality.org) and provide your username and password at the correct place within the code. Running this code can take a few minutes, depending on the number of countries you use in the multi-population model. We selected the countries with a gross-domestic-product above the European average in 2018.
+
+The package `MultiMoMo` provides such an example dataset (using the same set of countries).
+```{r}
+data <- MultiMoMo::european_mortality_data
+```
+
+
+
+

@@ -4,7 +4,7 @@
 \alias{plot_residuals_li_lee}
 \title{Plot the Poisson Pearson residuals of the multipopulation Li-Lee model}
 \usage{
-plot_residuals_li_lee(xv, yv, fit, CountrySPEC, sex)
+plot_residuals_li_lee(xv, yv, fit, country_spec, sex)
 }
 \arguments{
 \item{xv}{The vector of ages.}
@@ -13,7 +13,7 @@ plot_residuals_li_lee(xv, yv, fit, CountrySPEC, sex)
 
 \item{fit}{The fitted Li-Lee model.}
 
-\item{CountrySPEC}{The user code of your country of interest.}
+\item{country_spec}{The user code of your country of interest.}
 
 \item{sex}{The gender of interest (\code{"Male"} or \code{"Female"})}
 }
@@ -38,8 +38,8 @@ dat_M <- lst$M
 xv    <- 0:90
 yv = yvSPEC <- 1970:2018
 Countries   <- names(dat_M$UNI)
-CountrySPEC <- "BE"
-fit_M <- fit_li_lee(xv, yv, yvSPEC, CountrySPEC, dat_M, "NR", TRUE, FALSE)
-plot_residuals_li_lee(xv, yvSPEC, fit_M, CountrySPEC, "Male")
+country_spec <- "BE"
+fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
+plot_residuals_li_lee(xv, yvSPEC, fit_M, country_spec, "Male")
 
 }

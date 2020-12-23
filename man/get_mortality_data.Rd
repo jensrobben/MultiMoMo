@@ -4,18 +4,26 @@
 \alias{get_mortality_data}
 \title{Get the multipopulation mortality dataset}
 \usage{
-get_mortality_data(xv, yv, yvSPEC, Countries, CountrySPEC, username, password)
+get_mortality_data(
+  xv,
+  yv,
+  yv_spec,
+  countries,
+  country_spec,
+  username,
+  password
+)
 }
 \arguments{
 \item{xv}{Numeric. The vector of ages.}
 
 \item{yv}{The vector of years.}
 
-\item{yvSPEC}{The vector of years for the country of interest.}
+\item{yv_spec}{The vector of years for the country of interest.}
 
-\item{Countries}{The vector of countries.}
+\item{countries}{The vector of countries.}
 
-\item{CountrySPEC}{The country of interest.}
+\item{country_spec}{The country of interest.}
 
 \item{username}{The username of your HMD account.}
 
@@ -36,7 +44,7 @@ of countries from the Human Mortality Database (\href{https://www.mortality.org/
 }
 \details{
 This function downloads and/or calculates the death counts and exposures for an
-age range \code{xv}, a time range \code{yv} and for a specified set of countries \code{Countries}.
+age range \code{xv}, a time range \code{yv} and for a specified set of countries \code{countries}.
 The main data source is HMD. The second one is Eurostat for the years for which there is no
 data available at the HMD. From the HMD database this functions downloads the tables
 \code{Deaths} and \verb{Exposure to risk} in 1x1 format. In the case of Germany (\code{DE}), we consider
@@ -45,7 +53,7 @@ West-Germany instead of whole Germany for the period before the German unificati
 \code{demo_magec} (cohort deaths) and \code{demo_pjan} (population size). Period exposures are
 calculated from these datasets according to the HMD protocol.
 
-The argument \code{Countries} should contain the user code labels of your countries of
+The argument \code{countries} should contain the user code labels of your countries of
 interest. The available countries and their corresponding \verb{user codes} are given in the dataset
 \code{\link{country_codes}}, provided in this package.
 
@@ -53,22 +61,22 @@ Further, you have to register on \href{https://www.mortality.org/}{HMD} and prov
 the function with your \code{username} and \code{password} such that the function can
 automatically download from HMD.
 
-Remark that the year ranges \code{yv} and \code{yvSPEC} should not be the same. Typically
-a longer year range for yv is chosen and yvSPEC consists of some more recent years.
-When we download data for your country of interest (\code{CountrySPEC}), we consider
-the year range \code{min(yv,yvSPEC):tail(yvSPEC,1)} since the older data is also used for estimating
+Remark that the year ranges \code{yv} and \code{yv_spec} should not be the same. Typically
+a longer year range for yv is chosen and yv_spec consists of some more recent years.
+When we download data for your country of interest (\code{country_spec}), we consider
+the year range \code{min(yv,yv_spec):tail(yv_spec,1)} since the older data is also used for estimating
 the common mortality trend.
 }
 \examples{
 \dontrun{
 xv <- 0:90
 yv <- 1970:2015
-yvSPEC <- 1985:2018
-Countries <- c("BE", "IT", "UK", "DE")
-CountrySPEC <- "BE"
+yv_spec <- 1985:2018
+countries <- c("BE", "IT", "UK", "DE")
+country_spec <- "BE"
 username <- ""
 password <- ""
-data <- get_mortality_data(xv, yv, yvSPEC, Countries, CountrySPEC, username, password)
+data <- get_mortality_data(xv, yv, yv_spec, countries, country_spec, username, password)
 }
 
 }

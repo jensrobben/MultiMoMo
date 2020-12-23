@@ -6,14 +6,14 @@
 #'
 #' @param xv Numeric. The vector of ages.
 #' @param yv The vector of years.
-#' @param yvSPEC The vector of years for the country of interest.
-#' @param Countries The vector of countries.
-#' @param CountrySPEC The country of interest.
+#' @param yv_spec The vector of years for the country of interest.
+#' @param countries The vector of countries.
+#' @param country_spec The country of interest.
 #' @param username The username of your HMD account.
 #' @param password The password of your HMD acccount.
 #'
 #' @details This function downloads and/or calculates the death counts and exposures for an
-#'  age range \code{xv}, a time range \code{yv} and for a specified set of countries \code{Countries}.
+#'  age range \code{xv}, a time range \code{yv} and for a specified set of countries \code{countries}.
 #'  The main data source is HMD. The second one is Eurostat for the years for which there is no
 #'  data available at the HMD. From the HMD database this functions downloads the tables
 #'  `Deaths` and `Exposure to risk` in 1x1 format. In the case of Germany (\code{DE}), we consider
@@ -22,7 +22,7 @@
 #'  `demo_magec` (cohort deaths) and `demo_pjan` (population size). Period exposures are
 #'  calculated from these datasets according to the HMD protocol.
 #'
-#'  The argument \code{Countries} should contain the user code labels of your countries of
+#'  The argument \code{countries} should contain the user code labels of your countries of
 #'  interest. The available countries and their corresponding `user codes` are given in the dataset
 #'  \code{\link{country_codes}}, provided in this package.
 #'
@@ -30,10 +30,10 @@
 #'  the function with your \code{username} and \code{password} such that the function can
 #'  automatically download from HMD.
 #'
-#'  Remark that the year ranges \code{yv} and \code{yvSPEC} should not be the same. Typically
-#'  a longer year range for yv is chosen and yvSPEC consists of some more recent years.
-#'  When we download data for your country of interest (\code{CountrySPEC}), we consider
-#'  the year range \code{min(yv,yvSPEC):tail(yvSPEC,1)} since the older data is also used for estimating
+#'  Remark that the year ranges \code{yv} and \code{yv_spec} should not be the same. Typically
+#'  a longer year range for yv is chosen and yv_spec consists of some more recent years.
+#'  When we download data for your country of interest (\code{country_spec}), we consider
+#'  the year range \code{min(yv,yv_spec):tail(yv_spec,1)} since the older data is also used for estimating
 #'  the common mortality trend.
 #'
 #' @return A list containing:
@@ -47,12 +47,12 @@
 #' \dontrun{
 #' xv <- 0:90
 #' yv <- 1970:2015
-#' yvSPEC <- 1985:2018
-#' Countries <- c("BE", "IT", "UK", "DE")
-#' CountrySPEC <- "BE"
+#' yv_spec <- 1985:2018
+#' countries <- c("BE", "IT", "UK", "DE")
+#' country_spec <- "BE"
 #' username <- ""
 #' password <- ""
-#' data <- get_mortality_data(xv, yv, yvSPEC, Countries, CountrySPEC, username, password)
+#' data <- get_mortality_data(xv, yv, yv_spec, countries, country_spec, username, password)
 #' }
 #'
 #' @importFrom dplyr filter
@@ -62,7 +62,7 @@
 #'
 #' @export
 
-get_mortality_data <-  function(xv, yv, yvSPEC, Countries, CountrySPEC, username, password){
+get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, username, password){
 
   # Only continue with an internet connection
   if(! has_internet())
@@ -78,39 +78,39 @@ get_mortality_data <-  function(xv, yv, yvSPEC, Countries, CountrySPEC, username
   # Only continue with valid country labels
   df_country <- get_country_codes(data_magec = deaths_eurostat, data_mager = cohorts_eurostat,
                                   data_pjan = pop_eurostat)
-  if(! all(is.element(Countries, df_country[, "User_code"])))
-    stop(paste0("Invalid countries or country labels: ", paste(Countries[which(! Countries %in% df_country[,"User_code"])], collapse = ', '),
+  if(! all(is.element(countries, df_country[, "User_code"])))
+    stop(paste0("Invalid countries or country labels: ", paste(countries[which(! countries %in% df_country[,"User_code"])], collapse = ', '),
                 ". ", "Please consult the function 'get_country_codes()' to take valid countries ",
                 "or the correct user-labels for your chosen countries."))
 
-  # Only continue with numeric yv and yvSPEC
+  # Only continue with numeric yv and yv_spec
   yv     <- as.numeric(yv)
-  yvSPEC <- as.numeric(yvSPEC)
+  yv_spec <- as.numeric(yv_spec)
 
-  # Only continue when countrySPEC is included in Countries
-  if(! CountrySPEC %in% Countries)
-    stop(paste0("You need to include 'CountrySPEC' into the 'Countries' argument."))
+  # Only continue when country_spec is included in countries
+  if(! country_spec %in% countries)
+    stop(paste0("You need to include 'country_spec' into the 'countries' argument."))
 
-  # Only continue with valid yv and yvSPEC
-  if(! (all(diff(yv) == 1) & all(diff(yvSPEC) == 1) & all(diff(xv)) == 1))
-    stop(paste0("There may not be any missing years in the time ranges 'yv' and 'yvSPEC'",
+  # Only continue with valid yv and yv_spec
+  if(! (all(diff(yv) == 1) & all(diff(yv_spec) == 1) & all(diff(xv)) == 1))
+    stop(paste0("There may not be any missing years in the time ranges 'yv' and 'yv_spec'",
                 "or missing ages in the age range 'xv'."))
 
   # Check valid time range
-  sub_df   <- subset(df_country, User_code %in% Countries)
-  ind_spec <- which(sub_df[,"User_code"] == CountrySPEC)
+  sub_df   <- subset(df_country, User_code %in% countries)
+  ind_spec <- which(sub_df[,"User_code"] == country_spec)
   first_y  <- max(sub_df[-ind_spec,"FY"])
   last_y   <- min(sub_df[-ind_spec,"EY"])
   begin_y  <- min(yv)
   end_y    <- max(yv)
-  b_yspec  <- min(yvSPEC)
-  e_yspec  <- max(yvSPEC)
+  b_yspec  <- min(yv_spec)
+  e_yspec  <- max(yv_spec)
   if(begin_y < first_y | end_y > last_y)
     stop(paste0("The age range yv should be within the range: ", first_y,"-",last_y,". ",
                 "Have a look at the function 'get_country_codes()'."))
 
   if(b_yspec < sub_df[ind_spec,"FY"] | e_yspec > sub_df[ind_spec,"EY"])
-    stop(paste0("The age range yvSPEC should be within the range: ", sub_df[ind_spec,"FY"],"-",sub_df[ind_spec,"EY"],". ",
+    stop(paste0("The age range yv_spec should be within the range: ", sub_df[ind_spec,"FY"],"-",sub_df[ind_spec,"EY"],". ",
                 "Have a look at the function 'get_country_codes()'."))
 
   if(xv[1] != 0)
@@ -118,7 +118,7 @@ get_mortality_data <-  function(xv, yv, yvSPEC, Countries, CountrySPEC, username
 
 
   # Subset about information about the predefined countries
-  df_country <- subset(df_country, User_code %in% Countries)
+  df_country <- subset(df_country, User_code %in% countries)
 
   # Mortality data must be filtered out
   deaths_eurostat  <- dplyr::filter(deaths_eurostat, age %in% 0:99 &
@@ -137,16 +137,16 @@ get_mortality_data <-  function(xv, yv, yvSPEC, Countries, CountrySPEC, username
   lijst_M <- list()
   lijst_F <- list()
   yv0     <- yv
-  yvSPEC0 <- yvSPEC
+  yv_spec0 <- yv_spec
 
   # Link username and password to download from HMD
   userpwd <- paste(username, ":", password, sep = "")
 
   # Iterating over the different countries
   message("Iterating over the different countries:")
-  for (c in Countries){
+  for (c in countries){
     # Period
-    if (c == CountrySPEC) yv <- yvSPEC0 else yv <- yv0
+    if (c == country_spec) yv <- yv_spec0 else yv <- yv0
 
     ### Get the HMD and Eurostat country label
     c_hmd <- subset(df_country, User_code %in% c)[,"HMD_code"]
@@ -326,7 +326,7 @@ get_mortality_data <-  function(xv, yv, yvSPEC, Countries, CountrySPEC, username
   etxALL_M = etxALL_F <- matrix(0, nrow = length(yv0), ncol = length(xv))	# initialize matrix
   waALL_M  = waALL_F  <- matrix(1, nrow = length(yv0), ncol = length(xv))	# initialize matrix
 
-  for(i in 1:length(Countries)){
+  for(i in 1:length(countries)){
     dtxALL_M <- dtxALL_M + lijst_M[[i]]$dtx[as.character(yv0), ]
     dtxALL_F <- dtxALL_F + lijst_F[[i]]$dtx[as.character(yv0), ]
     etxALL_M <- etxALL_M + lijst_M[[i]]$etx[as.character(yv0), ]

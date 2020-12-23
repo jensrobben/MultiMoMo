@@ -11,7 +11,7 @@
 #' @param xv The vector of ages.
 #' @param yv The vector of years (for your country of interest).
 #' @param fit The fitted Li-Lee model.
-#' @param CountrySPEC The user code of your country of interest.
+#' @param country_spec The user code of your country of interest.
 #' @param sex The gender of interest (\code{"Male"} or \code{"Female"})
 #'
 #' @return A level plot showing the Poisson Pearson residuals.
@@ -24,18 +24,17 @@
 #' xv    <- 0:90
 #' yv = yvSPEC <- 1970:2018
 #' Countries   <- names(dat_M$UNI)
-#' CountrySPEC <- "BE"
-#' fit_M <- fit_li_lee(xv, yv, yvSPEC, CountrySPEC, dat_M, "NR", TRUE, FALSE)
-#' plot_residuals_li_lee(xv, yvSPEC, fit_M, CountrySPEC, "Male")
+#' country_spec <- "BE"
+#' fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
+#' plot_residuals_li_lee(xv, yvSPEC, fit_M, country_spec, "Male")
 #'
-#' @importFrom lattice levelplot
-#' @importFrom grDevices rainbow
+#' @importFrom tidyr gather
 #'
 #' @export
 
 
 
-plot_residuals_li_lee  <- function(xv, yv, fit, CountrySPEC, sex){
+plot_residuals_li_lee  <- function(xv, yv, fit, country_spec, sex){
 
   if (length(fit$k.t) != length(yv))
     stop("The vector yv should have the same length as the length of the time series k.t.")
@@ -46,24 +45,17 @@ plot_residuals_li_lee  <- function(xv, yv, fit, CountrySPEC, sex){
   if (! sex %in% c("Male", "Female"))
     stop("The argument sex must be either 'Male' or 'Female'.")
 
-  if(! CountrySPEC %in% MultiMoMo::country_codes[,"User_code"])
+  if(! country_spec %in% MultiMoMo::country_codes[,"User_code"])
     stop("Wrong user code. Check MultiMoMo::country_codes to look up the correct user code for your country")
 
-  # Setting up some scales to nicely visualize the Pearson residuals
-  nx     <- floor((length(xv)-1)/10)
-  ny     <- floor((length(yv)-1)/10)
-  scales <- list(y = list(at = seq(0.5, ny*10 + 0.5, by = 10), labels = seq(yv[1], yv[length(yv)], by = 10)),
-                 x = list(at = seq(0.5, nx*10 + 0.5, by = 10), labels = seq(xv[1], xv[length(xv)], by = 10)))
+  # Make data ready for plotting
+  res      <- as.data.frame(res)
+  res$Year <- as.numeric(rownames(res))
+  res      <- res %>% gather("Age","Value",-Year)
+  res$Age  <- as.numeric(as.character(res$Age))
 
-  res  <- fit$residuals
-  rg   <- max(c(-floor(min(res)),ceiling(max(res))))
-
-  par(cex.main = 20, cex.lab = 1.5, cex.axis = 1.5)
-  plot(levelplot(t(res), border = NA, border.lty = 1, border.lwd = 1, at = c(seq(-rg,rg, length.out = 16)),
-                 col.regions = rainbow(16, start = 0, end = 0.6),
-                 colorkey = list(height = 0.8, width = 0.75, axis.line = list(col="black")),
-                 scales = scales, aspect = 'fill', ylab = list(cex = 1.5, label = "Year"),
-                 xlab = list(cex = 1.5, label = "Age"),
-                 main = list(cex = 2, label = paste("Pearson residuals:", sex))))
+  ggplot(res, aes(x = Age, y = Year, fill = Value)) + geom_tile() + theme_bw(base_size = 20) +
+    scale_fill_gradient2(midpoint = 0, high = "red2", low = "blue2") +
+    scale_x_continuous(expand = c(0, 0),breaks = seq(0,90,10)) + scale_y_continuous(expand = c(0, 0))
 }
 
