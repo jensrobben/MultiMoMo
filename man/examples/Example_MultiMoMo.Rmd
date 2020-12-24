@@ -186,7 +186,7 @@ Using the generated mortality scenarios we obtain simulations of the period and 
 
 This results in the R-code:
 ```{r}
-le_yv   <- 1970:2070
+le_yv   <- 1988:2070
 le_ages <- c(0,65)
 le_type <- c("per", "coh")
 le_M    <- life_exp(le_yv, le_type, le_ages, close_rates_M)

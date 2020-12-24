@@ -521,42 +521,26 @@ close_rates_M  &lt;- close_mortality_rates(yv_spec, proj_rates$Male, kannisto_na
 
 ## Warning in e$fun(obj, substitute(ex), parent.frame(), e$data): already exporting
 ## variable(s): kannisto_nobs, mxt_hat, kannisto_extrapolateages, kannisto_obsages</code></pre>
-<pre class="r"><code>dimnames(close_rates_M[,,1]) # First simulation</code></pre>
-<pre><code>## [[1]]
-##   [1] &quot;0&quot;   &quot;1&quot;   &quot;2&quot;   &quot;3&quot;   &quot;4&quot;   &quot;5&quot;   &quot;6&quot;   &quot;7&quot;   &quot;8&quot;   &quot;9&quot;   &quot;10&quot;  &quot;11&quot; 
-##  [13] &quot;12&quot;  &quot;13&quot;  &quot;14&quot;  &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot;  &quot;21&quot;  &quot;22&quot;  &quot;23&quot; 
-##  [25] &quot;24&quot;  &quot;25&quot;  &quot;26&quot;  &quot;27&quot;  &quot;28&quot;  &quot;29&quot;  &quot;30&quot;  &quot;31&quot;  &quot;32&quot;  &quot;33&quot;  &quot;34&quot;  &quot;35&quot; 
-##  [37] &quot;36&quot;  &quot;37&quot;  &quot;38&quot;  &quot;39&quot;  &quot;40&quot;  &quot;41&quot;  &quot;42&quot;  &quot;43&quot;  &quot;44&quot;  &quot;45&quot;  &quot;46&quot;  &quot;47&quot; 
-##  [49] &quot;48&quot;  &quot;49&quot;  &quot;50&quot;  &quot;51&quot;  &quot;52&quot;  &quot;53&quot;  &quot;54&quot;  &quot;55&quot;  &quot;56&quot;  &quot;57&quot;  &quot;58&quot;  &quot;59&quot; 
-##  [61] &quot;60&quot;  &quot;61&quot;  &quot;62&quot;  &quot;63&quot;  &quot;64&quot;  &quot;65&quot;  &quot;66&quot;  &quot;67&quot;  &quot;68&quot;  &quot;69&quot;  &quot;70&quot;  &quot;71&quot; 
-##  [73] &quot;72&quot;  &quot;73&quot;  &quot;74&quot;  &quot;75&quot;  &quot;76&quot;  &quot;77&quot;  &quot;78&quot;  &quot;79&quot;  &quot;80&quot;  &quot;81&quot;  &quot;82&quot;  &quot;83&quot; 
-##  [85] &quot;84&quot;  &quot;85&quot;  &quot;86&quot;  &quot;87&quot;  &quot;88&quot;  &quot;89&quot;  &quot;90&quot;  &quot;91&quot;  &quot;92&quot;  &quot;93&quot;  &quot;94&quot;  &quot;95&quot; 
-##  [97] &quot;96&quot;  &quot;97&quot;  &quot;98&quot;  &quot;99&quot;  &quot;100&quot; &quot;101&quot; &quot;102&quot; &quot;103&quot; &quot;104&quot; &quot;105&quot; &quot;106&quot; &quot;107&quot;
-## [109] &quot;108&quot; &quot;109&quot; &quot;110&quot; &quot;111&quot; &quot;112&quot; &quot;113&quot; &quot;114&quot; &quot;115&quot; &quot;116&quot; &quot;117&quot; &quot;118&quot; &quot;119&quot;
-## [121] &quot;120&quot;
-## 
-## [[2]]
-##   [1] &quot;1988&quot; &quot;1989&quot; &quot;1990&quot; &quot;1991&quot; &quot;1992&quot; &quot;1993&quot; &quot;1994&quot; &quot;1995&quot; &quot;1996&quot; &quot;1997&quot;
-##  [11] &quot;1998&quot; &quot;1999&quot; &quot;2000&quot; &quot;2001&quot; &quot;2002&quot; &quot;2003&quot; &quot;2004&quot; &quot;2005&quot; &quot;2006&quot; &quot;2007&quot;
-##  [21] &quot;2008&quot; &quot;2009&quot; &quot;2010&quot; &quot;2011&quot; &quot;2012&quot; &quot;2013&quot; &quot;2014&quot; &quot;2015&quot; &quot;2016&quot; &quot;2017&quot;
-##  [31] &quot;2018&quot; &quot;2019&quot; &quot;2020&quot; &quot;2021&quot; &quot;2022&quot; &quot;2023&quot; &quot;2024&quot; &quot;2025&quot; &quot;2026&quot; &quot;2027&quot;
-##  [41] &quot;2028&quot; &quot;2029&quot; &quot;2030&quot; &quot;2031&quot; &quot;2032&quot; &quot;2033&quot; &quot;2034&quot; &quot;2035&quot; &quot;2036&quot; &quot;2037&quot;
-##  [51] &quot;2038&quot; &quot;2039&quot; &quot;2040&quot; &quot;2041&quot; &quot;2042&quot; &quot;2043&quot; &quot;2044&quot; &quot;2045&quot; &quot;2046&quot; &quot;2047&quot;
-##  [61] &quot;2048&quot; &quot;2049&quot; &quot;2050&quot; &quot;2051&quot; &quot;2052&quot; &quot;2053&quot; &quot;2054&quot; &quot;2055&quot; &quot;2056&quot; &quot;2057&quot;
-##  [71] &quot;2058&quot; &quot;2059&quot; &quot;2060&quot; &quot;2061&quot; &quot;2062&quot; &quot;2063&quot; &quot;2064&quot; &quot;2065&quot; &quot;2066&quot; &quot;2067&quot;
-##  [81] &quot;2068&quot; &quot;2069&quot; &quot;2070&quot; &quot;2071&quot; &quot;2072&quot; &quot;2073&quot; &quot;2074&quot; &quot;2075&quot; &quot;2076&quot; &quot;2077&quot;
-##  [91] &quot;2078&quot; &quot;2079&quot; &quot;2080&quot; &quot;2081&quot; &quot;2082&quot; &quot;2083&quot; &quot;2084&quot; &quot;2085&quot; &quot;2086&quot; &quot;2087&quot;
-## [101] &quot;2088&quot; &quot;2089&quot; &quot;2090&quot; &quot;2091&quot; &quot;2092&quot; &quot;2093&quot; &quot;2094&quot; &quot;2095&quot; &quot;2096&quot; &quot;2097&quot;
-## [111] &quot;2098&quot; &quot;2099&quot; &quot;2100&quot; &quot;2101&quot; &quot;2102&quot; &quot;2103&quot; &quot;2104&quot; &quot;2105&quot; &quot;2106&quot; &quot;2107&quot;
-## [121] &quot;2108&quot; &quot;2109&quot; &quot;2110&quot; &quot;2111&quot; &quot;2112&quot; &quot;2113&quot; &quot;2114&quot; &quot;2115&quot; &quot;2116&quot; &quot;2117&quot;
-## [131] &quot;2118&quot; &quot;2119&quot; &quot;2120&quot; &quot;2121&quot; &quot;2122&quot; &quot;2123&quot; &quot;2124&quot; &quot;2125&quot; &quot;2126&quot; &quot;2127&quot;
-## [141] &quot;2128&quot; &quot;2129&quot; &quot;2130&quot; &quot;2131&quot; &quot;2132&quot; &quot;2133&quot; &quot;2134&quot; &quot;2135&quot; &quot;2136&quot; &quot;2137&quot;
-## [151] &quot;2138&quot; &quot;2139&quot; &quot;2140&quot; &quot;2141&quot; &quot;2142&quot; &quot;2143&quot; &quot;2144&quot; &quot;2145&quot; &quot;2146&quot; &quot;2147&quot;
-## [161] &quot;2148&quot; &quot;2149&quot; &quot;2150&quot; &quot;2151&quot; &quot;2152&quot; &quot;2153&quot; &quot;2154&quot; &quot;2155&quot; &quot;2156&quot; &quot;2157&quot;
-## [171] &quot;2158&quot; &quot;2159&quot; &quot;2160&quot; &quot;2161&quot; &quot;2162&quot; &quot;2163&quot; &quot;2164&quot; &quot;2165&quot; &quot;2166&quot; &quot;2167&quot;
-## [181] &quot;2168&quot; &quot;2169&quot; &quot;2170&quot; &quot;2171&quot; &quot;2172&quot; &quot;2173&quot; &quot;2174&quot; &quot;2175&quot; &quot;2176&quot; &quot;2177&quot;
-## [191] &quot;2178&quot; &quot;2179&quot; &quot;2180&quot; &quot;2181&quot; &quot;2182&quot; &quot;2183&quot; &quot;2184&quot; &quot;2185&quot; &quot;2186&quot; &quot;2187&quot;
-## [201] &quot;2188&quot; &quot;2189&quot; &quot;2190&quot;</code></pre>
+<pre class="r"><code>dim(close_rates_M) </code></pre>
+<pre><code>## [1]   121   203 10000</code></pre>
+</div>
+<div id="period-and-cohort-life-expectancy" class="section level2">
+<h2>Period and cohort life expectancy</h2>
+<p>From the simulated scenarios for future mortality rates we obtain simulations for the period as well as cohort life expectancy. Using the assumption of piecewise constant force of mortality, the period life expectancy for an <span class="math inline">\(x\)</span> year old in year <span class="math inline">\(t\)</span> equals <span class="math display">\[\begin{eqnarray}
+e_x^{\text{per}}(t) &amp;=&amp; \frac{1-\exp{(-\mu_{x,t})}}{\mu_{x,t}}+\sum_{k\geq 1} \left(\prod_{j=0}^{k-1} \exp{(-\mu_{x+j,t})}\right)\frac{1-\exp{(-\mu_{x+k,t})}}{\mu_{x+k,t}},
+\end{eqnarray}\]</span> and the cohort life expectancy for an <span class="math inline">\(x\)</span> year old in year <span class="math inline">\(t\)</span> is <span class="math display">\[\begin{eqnarray}
+e_x^{\text{coh}}(t) &amp;=&amp; \frac{1-\exp{(-\mu_{x,t})}}{\mu_{x,t}}+\sum_{k\geq 1} \left(\prod_{j=0}^{k-1} \exp{(-\mu_{x+j,t+j})}\right)\frac{1-\exp{(-\mu_{x+k,t+k})}}{\mu_{x+k,t+k}},
+\end{eqnarray}\]</span> Using the generated mortality scenarios we obtain simulations of the period and cohort life expectancy, say <span class="math inline">\(e_x^{\text{per},i}(t)\)</span> and <span class="math inline">\(e_x^{\text{coh},i}(t)\)</span>.</p>
+<p>This results in the R-code:</p>
+<pre class="r"><code>le_yv   &lt;- 1988:2070
+le_ages &lt;- c(0,65)
+le_type &lt;- c(&quot;per&quot;, &quot;coh&quot;)
+le_M    &lt;- life_exp(le_yv, le_type, le_ages, close_rates_M)</code></pre>
+<pre><code>## Warning in e$fun(obj, substitute(ex), parent.frame(), e$data): already exporting
+## variable(s): sim_mxt_cl, grid_year_age, le_type</code></pre>
+<pre class="r"><code>le_F    &lt;- life_exp(le_yv, le_type, le_ages, close_rates_F)</code></pre>
+<pre><code>## Warning in e$fun(obj, substitute(ex), parent.frame(), e$data): already exporting
+## variable(s): sim_mxt_cl, grid_year_age, le_type</code></pre>
 </div>
 
 

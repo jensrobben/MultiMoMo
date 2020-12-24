@@ -104,7 +104,7 @@ life_exp <- function(le_yv, le_type, le_ages, sim_qxt_cl, parallel = TRUE){
   cl <- snow::makeCluster(nc-1)
   doSNOW::registerDoSNOW(cl)
   le <- foreach::foreach(t=1:nrow(grid_year_age), .verbose = FALSE,
-                                .export = c('sim_mxt_cl', 'diags','grid_year_age', 'le_type','le_calc','diags')) %dopar% {
+                                .export = c('diags','le_calc')) %dopar% {
     le_calc(sim_mxt_cl, age = grid_year_age[t,2], year = grid_year_age[t,1], le_type)}
   snow::stopCluster(cl)
 
