@@ -6,6 +6,11 @@ output:
   html_document: default
   pdf_document: default
 ---
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -64,21 +69,21 @@ dimnames(data$M$UNI$BE$dtx)
 
 ## Model specification
 The mortality model structures the logarithm of the force of mortality for Belgium, $\mu_{x,t}^{\text{BE}}$, as follows
-$$\begin{eqnarray}
+\begin{eqnarray}
 \ln \mu_{x,t}^{\text{BE}} &=& \ln \mu_{x,t}^{\text{EU}}+\ln \tilde{\mu}_{x,t}^{\text{BE}} \label{eq:fullmu}\\
 \ln \mu_{x,t}^{\text{EU}} &=& A_x + B_xK_t \label{eq:Europe} \\
-\ln \tilde{\mu}_{x,t}^{\text{BE}} &=& \alpha_x + \beta_x \kappa_t. \label{eq:Belgium}
-\end{eqnarray},$$
+\ln \tilde{\mu}_{x,t}^{\text{BE}} &=& \alpha_x + \beta_x \kappa_t. \label{eq:Belgium},
+\end{eqnarray}
 We recognize two times a Lee \& Carter specification; \ref{eq:Europe} is a LC model for the European evolution of mortality (driven by $\mu_{x,t}^{\text{EU}}$) and \ref{eq:Belgium} is a LC model for the Belgian deviation from this common trend (specified by $\tilde{\mu}_{x,t}^{\text{BE}}$). We calibrate this model on data with ages ranging from 0 up to 90, thus $\mathcal{X}=\{0,\ldots,90\}$, and a calibration period from $t_{\text{start}}$ up to 2018 for the European mortality trend. The same calibration period is used for the Belgian deviation from this common European mortality trend.
 
 For the time dependent parameters, $K_t$ and $\kappa_t$, the following time series models are used
-$$\begin{eqnarray}
+\begin{eqnarray}
 K_{t+1} &=& K_t+\theta + \epsilon_{t+1} \label{RWD} \\
 \kappa_{t+1} &=& c + \phi\kappa_{t}+\delta_{t+1}, \label{AR1}
-\end{eqnarray}$$
+\end{eqnarray}
 for males and females. This leads to four stochastic processes ($K_t^{M}, \kappa_t^M, K_t^F, \kappa_t^F$). The dynamics of the common period effect (see $\eqref{RWD}$), $K_t$, are modeled with a Random Walk with Drift ([RWD]), where $\theta$ is the drift and $\epsilon_{t+1}$ is white noise. The Belgian period effect (see $\eqref{AR1}$) $\kappa_t$ follows, in contrast with the \cite{IABE2015} model, an AR(1) process with intercept $c$.
 
-Further, we will jointly model the time series dynamics for men and women by assuming a multivariate Gaussian distribution with mean $(0,0,0,0)$ and covariance matrix $\boldsymbol{C}$ for the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$. We calibrate the parameters in these time series specifications on the estimated $K_t$ and $\kappa_t$ parameters, for $t\in \mathcal{T}$, and use these dynamics to forecast $\mu_{x,t}^{\text{BEL}}$ for $t \in \{2020, 2021,\ldots,t_{\max}\}$.
+Further, we will jointly model the time series dynamics for men and women by assuming a multivariate Gaussian distribution with mean $(0,0,0,0)$ and covariance matrix $\boldsymbol{C}$ for the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$. We calibrate the parameters in these time series specifications on the estimated $K_t$ and $\kappa_t$ parameters, for $t\in \mathcal{T}$, and use these dynamics to forecast $\mu_{x,t}^{\text{BEL}}$ for $t \in \{2019, 2020,\ldots,t_{\max}\}$.
 
 ## Model calibration
 We calibrate the parameters ($A_x$, $B_x$, $K_t$, $\alpha_x$, $\beta_x$ and $\kappa_t$) in the LL specification using Maximum Likelihood Estimation. We assume a Poisson distribution for the number of deaths random variable $D_{x,t}$, with mean $E_{x,t} \cdot \mu_{x,t}$ and $E_{x,t}$ the observed exposure to risk. To avoid identification problems in the LL model we use a conditional maximum likelihood approach. We calibrate the common parameters (i.e.~$A_x$, $B_x$ and $K_t$) in a first step, followed by the calibration of the Belgian parameters (i.e.~$\alpha_x$, $\beta_x$ and $\kappa_t$) in a second step. We apply this calibration strategy separately for males and females. This is done using the following bunch of code
@@ -93,10 +98,98 @@ plot_parameters_li_lee(xv, yv_spec, fit_M, sex = "Male", country_spec, method = 
 
 ```
 
-You can also plot e.g. the Belgian female period effect on its own:
+You can also plot e.g. the Belgian female period effect in a single plot:
 ```{r, fig.align='center'}
 plot_parameters_li_lee(xv, yv_spec, fit_M, sex = "Female", country_spec, method = "NR", type = "k.t")
 
 ```
 
+## Projection
+The start year of the calibration period, namely the year 1988, is chosen in such a way, that the fitted AR(1) time series processes are stable for both males and females (see Antonio et. al (2020)). 
+
+We then calibrate the time series models to the parameter estimates $\{(K_t,\kappa_t)\ |\ t\in \mathcal{T}\}$ with $\mathcal{T}=\{1988,\ldots,2019\}$ simultaneously for males and females. We hereby assume a multivariate Gaussian distribution for the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$ with mean $(0,0,0,0)$ and covariance matrix $\boldsymbol C$. The error terms are independent and identically distributed for all $t$. The parameters $\theta^M$, $\theta^F$, $c^M$, $c^F$, $\phi^M$, $\phi^F$ and $\boldsymbol{C}$, used in the time series specifications, are estimated using maximum likelihood.
+
+Within this package, this translates into the following code. We project the time dependent parameters until the year 2070 plus an additional 120 years, such that we will be able to make projections for the life expectancy until the year 2070 (we will close the mortality tables at the age of 120). This will be covered later on. We do 10\ 000 simulations.
+```{r}
+arima_spec <- list(K.t_M = "RWD", k.t_M = "AR1.1", K.t_F = "RWD", k.t_F = "AR1.1")
+n_ahead    <- length(2019:2070) + 120
+n_sim      <- 10000
+est_method <- "PORT"
+proj_par   <- project_parameters(fit_M, fit_F, n_ahead, n_sim, arima_spec, est_method)
+```
+
+To show that the estimated time series processes for the Belgian deviation model are stable, we need to verity that the AR(1) parameter estimates are smaller than 1.
+```{r}
+proj_par$coef_ktM
+proj_par$coef_ktF
+```
+
+The estimated covariance matrix $\boldsymbol{C}$ of the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$ equals:
+```{r}
+proj_par$cov_mat
+```
+
+The corresponding correlation matrix of the error terms $\left(\epsilon_t^{M},\delta_t^{M},\epsilon_t^{F},\delta_t^{F}\right)$ can then be calculated as
+```{r}
+S <- proj_par$cov_mat
+D <- diag(sqrt(diag(S)))
+Dinv <- solve(D)
+R <- Dinv %*% S %*% Dinv
+dimnames(R) <- dimnames(S)
+R
+```
+
+
+Using the simulations/projections of the time dependent parameters $\{(K_t,\kappa_t)\ |\ t\in \mathcal{T}\}$, we can construct projections for the Belgian mortality rates.
+```{r}
+proj_rates <- project_mortality_rates(fit_M, fit_F, proj_par)
+```
+
+## Closing mortality rates
+The Belgian mortality rates $q_{x,t}^{\text{BE}}$ for males and females need to be closed in order to make reliable projections for the life expectancy.
+
+We use the method of Kannistö to close each mortality scenario for old ages, say $x\in \{91,92,\ldots,120\}$. This parametric mortality law specifies the force of mortality in each scenario $i$, for ages $x>90$ and a specific year $t$, as follows:
+\begin{eqnarray}\label{eq:KanADSEIto}
+\mu_{x,t}^{i} &=& \frac{\phi_1^{i,t} \exp{(\phi_2^{i,t} x)}}{1+\phi_1^{i,t}\exp{(\phi_2^{i,t} x)}}.
+\end{eqnarray}
+We estimate $(\phi_1^i,\phi_2^i)$ for each scenario $i$ and year $t$ using the relation (see \cite{Doray})
+\begin{eqnarray}\label{eq:KanADSEItoLogit}
+\text{logit}\ \mu_{x,t}^{i} &=& \log{(\phi_1^{i,t})}+\phi_2^{i,t} x,
+\end{eqnarray}
+which we estimate with ordinary least squares estimation on the ages $x\in \{80,81,\ldots,90\}$. The estimates for $(\phi_1^{i,t},\phi_2^{i,t})$ are then used to close the generated mortality scenario for ages $x>90$.
+
+Finally, we can switch to scenarios for future mortality rates using the transformation:
+\begin{eqnarray}
+q_{x,t}^{i} &=& 1-\exp{(-\mu_{x,t}^i)},
+\end{eqnarray}
+for $t=2019,2020,\ldots,t_{\max}$ and $x\in 0,1,\ldots, 120$.
+
+The closing procedure can be executed with the following bunch of code:
+```{r}
+kannisto_nages <- 30
+kannisto_nobs  <- 11
+close_rates_M  <- close_mortality_rates(yv_spec, proj_rates$Male, kannisto_nages, kannisto_nobs)
+close_rates_F  <- close_mortality_rates(yv_spec, proj_rates$Female, kannisto_nages, kannisto_nobs)
+dim(close_rates_M) 
+```
+
+## Period and cohort life expectancy
+From the simulated scenarios for future mortality rates we obtain simulations for the period as well as cohort life expectancy. Using the assumption of piecewise constant force of mortality, the period life expectancy for an $x$ year old in year $t$ equals
+\begin{eqnarray}
+e_x^{\text{per}}(t) &=& \frac{1-\exp{(-\mu_{x,t})}}{\mu_{x,t}}+\sum_{k\geq 1} \left(\prod_{j=0}^{k-1} \exp{(-\mu_{x+j,t})}\right)\frac{1-\exp{(-\mu_{x+k,t})}}{\mu_{x+k,t}},
+\end{eqnarray}
+and the cohort life expectancy for an $x$ year old in year $t$ is
+\begin{eqnarray}
+e_x^{\text{coh}}(t) &=& \frac{1-\exp{(-\mu_{x,t})}}{\mu_{x,t}}+\sum_{k\geq 1} \left(\prod_{j=0}^{k-1} \exp{(-\mu_{x+j,t+j})}\right)\frac{1-\exp{(-\mu_{x+k,t+k})}}{\mu_{x+k,t+k}},
+\end{eqnarray}
+Using the generated mortality scenarios we obtain simulations of the period and cohort life expectancy, say $e_x^{\text{per},i}(t)$ and $e_x^{\text{coh},i}(t)$. 
+
+This results in the R-code:
+```{r}
+le_yv   <- 1970:2070
+le_ages <- c(0,65)
+le_type <- c("per", "coh")
+le_M    <- life_exp(le_yv, le_type, le_ages, close_rates_M)
+le_M    <- life_exp(le_yv, le_type, le_ages, close_rates_F)
+```
 

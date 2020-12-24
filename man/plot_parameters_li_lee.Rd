@@ -4,7 +4,7 @@
 \alias{plot_parameters_li_lee}
 \title{Plot the parameters of the multipopulation (Li-Lee) model}
 \usage{
-plot_parameters_li_lee(xv, yv, fit, sex, CountrySPEC, method, type)
+plot_parameters_li_lee(xv, yv, fit, sex, country_spec, method, type)
 }
 \arguments{
 \item{xv}{The vector of ages.}
@@ -15,7 +15,7 @@ plot_parameters_li_lee(xv, yv, fit, sex, CountrySPEC, method, type)
 
 \item{sex}{The gender of interest (\code{"Male"} or \code{"Female"})}
 
-\item{CountrySPEC}{The user code of your country of interest.}
+\item{country_spec}{The user code of your country of interest.}
 
 \item{method}{The method used to fit the Li-Lee mortality model (currently only \code{"NR"} working).}
 
@@ -38,8 +38,8 @@ dat_M <- lst$M
 xv    <- 0:90
 yv = yvSPEC <- 1970:2018
 Countries   <- names(dat_M$UNI)
-CountrySPEC <- "BE"
-fit_M <- fit_li_lee(xv, yv, yvSPEC, CountrySPEC, dat_M, "NR", TRUE, FALSE)
-plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", CountrySPEC, "NR", "ALL")
+country_spec <- "BE"
+fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
+plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "ALL")
 
 }

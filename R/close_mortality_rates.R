@@ -90,9 +90,7 @@ close_mortality_rates <- function(yv, sim_qxt, kannisto_nages, kannisto_nobs, pa
     # Parallel code for closing simulated forces of mortality
     cl <- snow::makeCluster(nc-1)
     doSNOW::registerDoSNOW(cl)
-    close_sim <- foreach::foreach(t=1:n_ahead, .export = c('n_sim','kannisto_nobs','mxt_sim',
-                                        'kannisto_extrapolateages','kannisto',
-                                        'kannisto_obsages')) %dopar% {
+    close_sim <- foreach::foreach(t=1:n_ahead, .export = c('kannisto')) %dopar% {
       kannisto(t, mxt_sim, n_sim, kannisto_nobs, kannisto_extrapolateages, kannisto_obsages)
     }
     snow::stopCluster(cl)
@@ -113,9 +111,7 @@ close_mortality_rates <- function(yv, sim_qxt, kannisto_nages, kannisto_nobs, pa
   # Parallel code for closing fitted forces of mortality
   cl <- snow::makeCluster(nc-1)
   doSNOW::registerDoSNOW(cl)
-  close_fit <- foreach::foreach(t=1:length(yv), .export = c('kannisto_nobs','mxt_hat',
-                                      'kannisto_extrapolateages','kannisto',
-                                      'kannisto_obsages')) %dopar% {
+  close_fit <- foreach::foreach(t=1:length(yv), .export = c('kannisto')) %dopar% {
     kannisto(t, mxt_hat, n_sim = 1, kannisto_nobs, kannisto_extrapolateages,kannisto_obsages)
                                       }
   snow::stopCluster(cl)
