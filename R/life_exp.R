@@ -113,10 +113,14 @@ life_exp <- function(le_yv, le_type, le_ages, sim_qxt_cl, parallel = TRUE){
 
   # Store results
   for(a in le_ages)
-    for (t in le_yv)
+    for(t in le_yv)
       for(type in le_type)
         output[[type]][[paste0("Age_",a)]] <- t(sapply(le_yv, function(t)
           le[[paste0(t,"_",a)]]$per, simplify = 'array'))
+
+  for(t in le_type)
+    for(a in le_ages)
+      dimnames(output[[type]][[paste0("Age_",a)]]) <- list(le_yv, 1:n_sim)
 
   output
 }
