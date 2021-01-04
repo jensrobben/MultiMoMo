@@ -112,7 +112,7 @@ close_mortality_rates <- function(yv, sim_qxt, kannisto_nages, kannisto_nobs, pa
   cl <- snow::makeCluster(nc-1)
   doSNOW::registerDoSNOW(cl)
   close_fit <- foreach::foreach(t=1:length(yv), .export = c('kannisto')) %dopar% {
-    kannisto(t, mxt_hat, n_sim = 1, kannisto_nobs, kannisto_extrapolateages,kannisto_obsages)
+    kannisto(t, mxt_hat, n_sim = 1, kannisto_nobs, kannisto_extrapolateages, kannisto_obsages)
                                       }
   snow::stopCluster(cl)
 
@@ -122,7 +122,7 @@ close_mortality_rates <- function(yv, sim_qxt, kannisto_nages, kannisto_nobs, pa
 
   ## Concatenate all results
   mxt_new <- array(0,dim=c(n_age + kannisto_nages, length(yvv), n_sim))
-  dimnames(mxt_new) <- list(xv[1]:(tail(xv,1)+kannisto_nages), yvv, 1:n_sim)
+  dimnames(mxt_new) <- list(xv[1]:(tail(xv,1) + kannisto_nages), yvv, 1:n_sim)
 
   mxt_new[,as.character(yv),] <- mxt_hat_all[,,1]
   mxt_new[,as.character(yvv[! yvv %in% yv]),] <- mxt_sim_all
