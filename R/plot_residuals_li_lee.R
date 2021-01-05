@@ -49,7 +49,7 @@ plot_residuals_li_lee  <- function(xv, yv, fit, country_spec, sex){
     stop("Wrong user code. Check MultiMoMo::country_codes to look up the correct user code for your country")
 
   # Make data ready for plotting
-  res      <- as.data.frame(res)
+  res      <- as.data.frame(fit$residuals)
   res$Year <- as.numeric(rownames(res))
   res      <- res %>% gather("Age","Value",-Year)
   res$Age  <- as.numeric(as.character(res$Age))

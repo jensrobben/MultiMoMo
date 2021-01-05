@@ -2,7 +2,7 @@
 % Please edit documentation in R/close_obs_death_rates.R
 \name{close_obs_death_rates}
 \alias{close_obs_death_rates}
-\title{Closing the observed death rations}
+\title{Closing the observed death rates}
 \usage{
 close_obs_death_rates(deaths_obs, exp_obs, kannisto_nages, kannisto_nobs)
 }
@@ -24,7 +24,7 @@ The argument \code{deaths_obs} should be a matrix (year x ages) of
 the deaths of your country of interest, e.g. as provided by the function
 \code{\link{get_mortality_data}}.
 
-The same holds for the argument \cdoe{exp_obs}.
+The same holds for the argument \code{exp_obs}.
 }
 \examples{
 lst   <- MultiMoMo::european_mortality_data

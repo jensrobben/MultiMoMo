@@ -1,4 +1,4 @@
-#' Closing the observed death rations
+#' Closing the observed death rates
 #'
 #' @description This functions closes the observed death rates of the country of interest.
 #'
@@ -12,7 +12,7 @@
 #' the deaths of your country of interest, e.g. as provided by the function
 #' \code{\link{get_mortality_data}}.
 #'
-#' The same holds for the argument \cdoe{exp_obs}.
+#' The same holds for the argument \code{exp_obs}.
 #'
 #' @examples
 #' lst   <- MultiMoMo::european_mortality_data

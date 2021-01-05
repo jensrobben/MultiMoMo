@@ -193,3 +193,20 @@ le_M    <- life_exp(le_yv, le_type, le_ages, close_rates_M)
 le_F    <- life_exp(le_yv, le_type, le_ages, close_rates_F)
 ```
 
+Next, we can visualize the simulated period and cohort life expectancies. But, first, we will calculate the observed death rates during the years 1988-2018. This will give us later on a visual idea how well our fitted period life expectancies correspond to the observed ones. We focus on the males.
+
+```{r}
+deaths_obs <- data$M$UNI$BE$dtx
+exp_obs    <- data$M$UNI$BE$etx
+kannisto_nages <- 30
+kannisto_nobs  <- 11
+close_obs_m    <- close_obs_death_rates(deaths_obs, exp_obs, kannisto_nages, kannisto_nobs)
+
+```
+
+Lastly, we perform the visualization of the simulated period and cohort life expectancies for males and for the ages 0 and 65. We visualize a 99% confidence bound.
+```{r, fig.align='center'}
+plot_life_exp(le_yv, age = 0, le_sim = le_M, sex = "Male", type = le_type, quantile = "99%", m_obs = close_obs_m)
+plot_life_exp(le_yv, age = 65, le_sim = le_M, sex = "Male", type = le_type, quantile = "99%", m_obs = close_obs_m)
+```
+
