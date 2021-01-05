@@ -11,7 +11,7 @@ plot_life_exp(le_yv, age, le_sim, sex, type, quantile, m_obs = NULL)
 
 \item{age}{The age.}
 
-\item{le_sim}{The estimated period and/or cohort life expectancies.}
+\item{le_sim}{The simulated period and/or cohort life expectancies.}
 
 \item{sex}{Character vector. "Male" or "Female".}
 
@@ -23,11 +23,11 @@ plot_life_exp(le_yv, age, le_sim, sex, type, quantile, m_obs = NULL)
 interest.}
 }
 \value{
-A ggplot representing the evolution and the uncertaincy of the period
-and/or cohort life expectancy for a particul age and gender.
+A ggplot representing the evolution and the uncertainty of the period
+and/or cohort life expectancy for a particular age and gender.
 }
 \description{
-This function plots the estimated period and/or cohort life
+This function plots the simulated period and/or cohort life
 expectancies for a particular age, as retreived from the function
 \code{\link{life_exp}}, as a function of time.
 }
@@ -35,7 +35,7 @@ expectancies for a particular age, as retreived from the function
 The argument \code{le_sim} should be the output of the function
 \code{\link{life_exp}}
 
-The argument \code{m_obs} should be the ouput of the function
+The argument \code{m_obs} should be the output of the function
 \code{\link{close_obs_death_rates}}
 }
 \examples{

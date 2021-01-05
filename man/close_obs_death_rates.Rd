@@ -19,6 +19,13 @@ rates.}
 \description{
 This functions closes the observed death rates of the country of interest.
 }
+\details{
+The argument \code{deaths_obs} should be a matrix (year x ages) of
+the deaths of your country of interest, e.g. as provided by the function
+\code{\link{get_mortality_data}}.
+
+The same holds for the argument \cdoe{exp_obs}.
+}
 \examples{
 lst   <- MultiMoMo::european_mortality_data
 dat_M <- lst$M
@@ -29,5 +36,5 @@ exp_obs    <- dat_M$UNI$BE$etx
 kannisto_nages <- 30
 kannisto_nobs  <- 11
 close_obs_m    <- close_obs_death_rates(deaths_obs, exp_obs, kannisto_nages, kannisto_nobs)
+
 }
-\keyword{internal}
