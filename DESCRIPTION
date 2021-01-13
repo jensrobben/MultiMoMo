@@ -28,7 +28,6 @@ Imports:
     ggpubr,
     grDevices,
     gridExtra,
-    graphics,
     ISOcodes,
     lattice,
     MASS,

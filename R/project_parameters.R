@@ -87,9 +87,8 @@
 #' est_method <- "PORT"
 #' proj       <- project_parameters(fit_M, fit_F, n_ahead, n_sim, arima_spec, est_method)
 #'
-#' @importFrom stats nlminb as.formula
+#' @importFrom stats nlminb as.formula rnorm
 #' @importFrom systemfit systemfit
-#' @importFrom stats rnorm
 #'
 #' @export
 

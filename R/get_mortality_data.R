@@ -56,8 +56,7 @@
 #' }
 #'
 #' @importFrom dplyr filter
-#' @importFrom curl has_internet
-#' @importFrom RCurl getURL
+#' @importFrom RCurl url.exists getURL
 #' @importFrom utils read.table tail
 #'
 #' @export
@@ -65,7 +64,7 @@
 get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, username, password){
 
   # Only continue with an internet connection
-  if(! has_internet())
+  if(! url.exists("www.google.com"))
     stop(paste0("No internet connection. You need an internet connection to download mortality ",
                 "data from the internet."))
 
@@ -159,7 +158,7 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
       path_deaths <- paste0("https://www.mortality.org/hmd/", c_hmd, "/STATS/", "Deaths_1x1.txt")
       txt         <- getURL(path_deaths, userpwd = userpwd)
       con         <- textConnection(txt)
-      deaths_hmd  <- data.frame(try(read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
+      deaths_hmd  <- data.frame(try(h(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
       close(con)
       .check_file(deaths_hmd)
       start_year  <- deaths_hmd$Year[1]; end_year <- tail(deaths_hmd$Year,1)
@@ -359,4 +358,5 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
   rownames(X) <- unique(x$time)
   X
 }
+
 

@@ -40,6 +40,6 @@ yv = yvSPEC <- 1970:2018
 Countries   <- names(dat_M$UNI)
 country_spec <- "BE"
 fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
-plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "ALL")
+plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "k.t")
 
 }

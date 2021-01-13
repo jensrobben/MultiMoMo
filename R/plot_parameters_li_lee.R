@@ -24,12 +24,10 @@
 #' Countries   <- names(dat_M$UNI)
 #' country_spec <- "BE"
 #' fit_M <- fit_li_lee(xv, yv, yvSPEC, country_spec, dat_M, "NR", TRUE, FALSE)
-#' plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "ALL")
+#' plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "k.t")
 #'
 #' @import ggplot2
 #' @importFrom plyr mapvalues
-#' @importFrom graphics par
-#' @importFrom stats ts
 #'
 #' @export
 
@@ -81,13 +79,25 @@ plot_parameters_li_lee <- function(xv, yv, fit, sex, country_spec, method, type)
       sxlab <- if(grepl("t",type)) "Year" else "Age"
 
   if (type != "ALL"){
-    par(cex.main = 2, cex.lab = 1.5, cex.axis = 1.5)
-    plot(ts(fit[[type]],start = xrange[1]), main = smain, xlab = sxlab, ylab = "", type = "l",
-         ylim = c(min(fit[[type]]), max(fit[[type]])), lwd = 2)}
+    df <- data.frame("x" = xrange, "y" = fit[[type]])
+    p <- ggplot(df, aes(x = x, y = y)) + geom_line(col = "black", size = 1.1) + xlab(sxlab) +
+      ylab("") + theme_bw(base_size = 20) + ggtitle(smain)
+    print(p)}
 
   if (type == "ALL"){
-    par(mfrow = c(2,3), cex.main = 2, cex.lab = 1.5, cex.axis = 1.5)
-    for (t in 1:length(param_names))
-      plot(ts(fit[[param_names[t]]],start = (xrange[[t]])[1]), main = smain[[t]], xlab = sxlab[[t]], ylab = "", type = "l",
-           ylim = c(min(fit[[param_names[t]]]), max(fit[[param_names[t]]])), lwd = 2)
-    par(mfrow=c(1,1))}}
+    g_legend <- function(a.gplot){
+      tmp <- ggplot_gtable(ggplot_build(a.gplot))
+      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+      legend <- tmp$grobs[[leg]]
+      return(legend)}
+
+    plots <- list()
+
+    for (t in 1:length(param_names)){
+      df <- data.frame("x" = xrange[[t]], "y" = fit[[param_names[[t]]]])
+      plots[[t]] <- ggplot(df, aes(x = x, y = y)) + geom_line(col = "black", size = 1.05) +
+        xlab(sxlab[t]) + ylab("") + theme_bw(base_size = 15) + ggtitle(smain[[t]])}
+
+    ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]], plots[[6]],
+              ncol=3, nrow=2)}
+}
