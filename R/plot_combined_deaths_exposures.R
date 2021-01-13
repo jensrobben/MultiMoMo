@@ -24,17 +24,18 @@
 #' @importFrom tidyr gather
 #'
 #' @examples
+#' \dontrun{
 #' xv          <- 0:90
 #' yv          <- 1970:2018
 #' yvSPEC      <- 1970:2018
-#' username    <- "jens.robben@live.be"
-#' password    <- "AtletieK1996"
+#' username    <- ""
+#' password    <- ""
 #' Country     <- c("FR", "BE", "NL", "LU")
 #' CountrySPEC <- "BE"
 #' data        <- get_mortality_data(xv, yv, yvSPEC, Country, CountrySPEC, username, password)
 #' data_M      <- data$M
 #' data_F      <- data$F
-#' plot_combined_deaths_exposures(Country, CountrySPEC, data_M, data_F)
+#' plot_combined_deaths_exposures(Country, CountrySPEC, data_M, data_F)}
 #'
 #'
 #' @export
