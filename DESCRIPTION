@@ -1,13 +1,14 @@
 Package: MultiMoMo
-Title: A multi-population Li-Lee mortality model
+Type: Package
+Title: Multi-population mortality models
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Jens",
+           family = "Robben",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This package downloades mortality data from HMD and Eurostat. Moreover, it provides several functions for calibrating and projecting a Li-Lee mortality model. On top of that, functions for calculating period and cohort life expectancies are available. 
+           email = "jens.robben@kuleuven.be")
+Maintainer: Jens Robben <jens.robben@kuleuven.be>
+Description: The goal of this package is to calibrate and project a multi-population Li-Lee mortality model. The package can automatically download mortality data (deaths and exposures) from the Human Mortality Database and Eurostat. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -46,5 +47,3 @@ Imports:
     foreach
 VignetteBuilder: knitr
 RdMacros: mathjaxr
-Depends: 
-    R (>= 2.10)
