@@ -16,7 +16,6 @@
 #'
 #' @importFrom dplyr %>% left_join pull filter arrange
 #' @importFrom RCurl url.exists
-#' @importFrom plyr mapvalues
 #' @importFrom tidyr separate gather
 #' @importFrom readr read_tsv cols col_character
 #' @importFrom data.table as.data.table
@@ -68,5 +67,31 @@ get_data_eurostat <- function(code){
   data       <- as.data.table(data)
   data       <- data.frame(data[order(data$time, data$age, data$sex, data$geo),])
   data
+}
+
+#' Function mapvalues from tidyr pakcage
+#' @keywords internal
+
+mapvalues <- function (x, from, to, warn_missing = TRUE)
+{
+  if (length(from) != length(to)) {
+    stop("`from` and `to` vectors are not the same length.")
+  }
+  if (!is.atomic(x)) {
+    stop("`x` must be an atomic vector.")
+  }
+  if (is.factor(x)) {
+    levels(x) <- mapvalues(levels(x), from, to, warn_missing)
+    return(x)
+  }
+  mapidx <- match(x, from)
+  mapidxNA <- is.na(mapidx)
+  from_found <- sort(unique(mapidx))
+  if (warn_missing && length(from_found) != length(from)) {
+    message("The following `from` values were not present in `x`: ",
+            paste(from[!(1:length(from) %in% from_found)], collapse = ", "))
+  }
+  x[!mapidxNA] <- to[mapidx[!mapidxNA]]
+  x
 }
 

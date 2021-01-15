@@ -25,7 +25,6 @@
 #'
 #' @importFrom utils read.csv tail
 #' @importFrom dplyr %>% left_join
-#' @importFrom plyr mapvalues
 #' @importFrom stats na.omit setNames
 #'
 #' @export

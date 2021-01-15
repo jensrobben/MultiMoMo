@@ -27,7 +27,6 @@
 #' plot_parameters_li_lee(xv, yvSPEC, fit_M, "Male", country_spec, "NR", "k.t")
 #'
 #' @import ggplot2
-#' @importFrom plyr mapvalues
 #'
 #' @export
 
@@ -101,3 +100,6 @@ plot_parameters_li_lee <- function(xv, yv, fit, sex, country_spec, method, type)
     ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]], plots[[6]],
               ncol=3, nrow=2)}
 }
+
+
+
