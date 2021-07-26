@@ -158,7 +158,7 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
       path_deaths <- paste0("https://www.mortality.org/hmd/", c_hmd, "/STATS/", "Deaths_1x1.txt")
       txt         <- getURL(path_deaths, userpwd = userpwd)
       con         <- textConnection(txt)
-      deaths_hmd  <- data.frame(try(h(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
+      deaths_hmd  <- data.frame(try(utils::read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
       close(con)
       .check_file(deaths_hmd)
       start_year  <- deaths_hmd$Year[1]; end_year <- tail(deaths_hmd$Year,1)
