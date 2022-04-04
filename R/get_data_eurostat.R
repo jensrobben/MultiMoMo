@@ -35,10 +35,10 @@ get_data_eurostat <- function(code){
                  code,".tsv.gz")
   url  <- paste0(base,ext)
 
-  # Check if url exists
-  if(! url.exists(url))
-    stop(paste0("The URL ", url, " does not exist anymore. Please contact the maintainer",
-                " of this package to make the necessary changes."))
+  # # Check if url exists
+  # if(! url.exists(url))
+  #   stop(paste0("The URL ", url, " does not exist anymore. Please contact the maintainer",
+  #               " of this package to make the necessary changes."))
 
   # Download URL
   dest_file <- tempfile()
