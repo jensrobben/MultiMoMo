@@ -32,20 +32,7 @@
 
 get_country_codes <- function(data_magec = NULL, data_mager = NULL, data_pjan = NULL){
   # Get the possible countries at the HMD
-  url_hmd  <- "https://www.mortality.org/countries.csv"
-  if(! url.exists(url_hmd))
-    stop(paste0("The URL: ", url_hmd, " does not exists anymore.",
-                " Please consult the builder of the package."))
-
-  file_hmd <- read.csv(url_hmd, stringsAsFactors = FALSE)
-  file_hmd <- file_hmd[!is.na(file_hmd[,"ST_EY"]),]
-  file_hmd <- file_hmd[,c("Country", "Subpop.Code", "ST_FY", "ST_EY", "Gap_FY", "Gap_EY")]
-
-  col_num  <- c("ST_FY", "ST_EY", "Gap_FY", "Gap_EY")
-  file_hmd[,col_num] <- apply(file_hmd[,col_num], 2, function(x) as.numeric(x))
-
-  # Set some column names
-  colnames(file_hmd) <- c("Country", "HMD", "FY", "EY", "Gap_FY", "Gap_EY")
+  file_hmd <- MultiMoMo::countries
 
   # Special case: Germany
   wGer <- file_hmd[which(file_hmd[,"Country"] == "Germany: West Germany"),]
@@ -72,7 +59,7 @@ get_country_codes <- function(data_magec = NULL, data_mager = NULL, data_pjan = 
   # Change codes a bit (difference with european commision)
   old <- c("GR", "GB")
   new <- c("EL", "UK")
-  file[,"Alpha_2"] <- mapvalues(file[,"Alpha_2"], old, new)
+  file[,"Alpha_2"] <- plyr::mapvalues(file[,"Alpha_2"], old, new)
 
   # Years HMD
   years_hmd <- lapply(1:nrow(file), function(x) {

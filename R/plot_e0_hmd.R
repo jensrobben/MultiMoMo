@@ -55,7 +55,7 @@ plot_e0_hmd <- function(Country, username, password){
   data_e0 <- list()
   message("Downloading data from HMD for each country")
   for(i in 1:nc){
-    url_c   <- paste0("https://www.mortality.org/hmd/", Country[i], "/STATS/", "E0per.txt")
+    url_c   <- paste0("https://former.mortality.org/hmd/", Country[i], "/STATS/", "E0per.txt")
     txt     <- getURL(url_c, userpwd = userpwd)
     con     <- textConnection(txt)
     e0_hmd  <- data.frame(try(read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))

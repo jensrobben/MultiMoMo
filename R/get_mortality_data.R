@@ -154,9 +154,10 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
     end_year <- min(yv) - 1
 
     if(!is.na(c_hmd)){
+
       ### Deaths from HMD
-      path_deaths <- paste0("https://www.mortality.org/hmd/", c_hmd, "/STATS/", "Deaths_1x1.txt")
-      txt         <- getURL(path_deaths, userpwd = userpwd)
+      path_deaths <- paste0("https://former.mortality.org/hmd/", c_hmd, "/STATS/", "Deaths_1x1.txt")
+      txt         <- RCurl::getURL(path_deaths, userpwd = userpwd)
       con         <- textConnection(txt)
       deaths_hmd  <- data.frame(try(utils::read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
       close(con)
@@ -172,7 +173,7 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
       matrix_deaths_F <- matrix_deaths_F[, as.character(xv)]
 
       ### Exposures from HMD
-      path_exp <- paste("https://www.mortality.org/hmd/", c_hmd, "/STATS/", "Exposures_1x1.txt", sep = "")
+      path_exp <- paste("https://former.mortality.org/hmd/", c_hmd, "/STATS/", "Exposures_1x1.txt", sep = "")
       txt <- getURL(path_exp, userpwd = userpwd)
       con <- textConnection(txt)
       exp_hmd <- data.frame(try(read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
@@ -190,7 +191,7 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
       # In the case of Germany -> Include data from West-Germany before the German unification (1990)
       if (c == "DE"){
         # Get deaths on the HMD from West-Germany
-        path_deaths <- paste("https://www.mortality.org/hmd/", "DEUTW", "/STATS/", "Deaths_1x1.txt", sep = "")
+        path_deaths <- paste("https://former.mortality.org/hmd/", "DEUTW", "/STATS/", "Deaths_1x1.txt", sep = "")
         txt         <- getURL(path_deaths, userpwd = userpwd)
         con         <- textConnection(txt)
         deaths_hmd  <- data.frame(try(read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
@@ -211,7 +212,7 @@ get_mortality_data <-  function(xv, yv, yv_spec, countries, country_spec, userna
                                                   as.character(xv)], matrix_deaths_F)
 
         # Get exposures on HMD from West-Germany
-        path_exp <- paste("https://www.mortality.org/hmd/", "DEUTW", "/STATS/", "Exposures_1x1.txt", sep = "")
+        path_exp <- paste("https://former.mortality.org/hmd/", "DEUTW", "/STATS/", "Exposures_1x1.txt", sep = "")
         txt <- getURL(path_exp, userpwd = userpwd)
         con <- textConnection(txt)
         exp_hmd <- data.frame(try(read.table(con, skip = 2, header = TRUE, na.strings = "."), TRUE))
